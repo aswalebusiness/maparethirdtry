@@ -1,0 +1,690 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Mapare Dental · Our Specialties & Services</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ===== COLOR SCHEME ===== */
+        :root {
+            --brand-brown: #4a2c1d;
+            --brand-orange: #f39200;
+            --bg-light: #fdfdfd;
+            --text-gray: #666;
+            --service-bg: #f0f7f7;
+            --service-text: #004d40;
+            --service-card-bg: #ffffff;
+            --trust-bg-light: #fef9f2;
+            --card-white: #ffffff;
+            --trust-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --review-border: #f0e4d7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding-top: 70px;
+            overflow-x: hidden;
+            background-color: var(--bg-light);
+        }
+
+        /* ----- NAVBAR ----- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 45px; width: auto; border-radius: 4px; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .desktop-nav-links { display: none; }
+        .desktop-nav-links a { 
+            text-decoration: none; 
+            color: var(--brand-brown); 
+            font-weight: bold; 
+            font-size: 14px; 
+            margin: 0 12px;
+            transition: 0.2s;
+        }
+        .desktop-nav-links a:hover {
+            color: var(--brand-orange);
+        }
+        .call-btn-header, .book-btn-header {
+            color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;
+            font-size: 13px; cursor: pointer; border: none; display: flex; align-items: center;
+            gap: 5px; font-weight: bold; white-space: nowrap;
+        }
+        .call-btn-header { background: var(--brand-brown); }
+        .book-btn-header { background: var(--brand-orange); }
+
+        /* Call drawer (right side) */
+        .call-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0,0,0,0.15);
+            transition: 0.3s;
+            z-index: 4000;
+            padding: 70px 20px 30px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 0 0 20px;
+        }
+        .call-drawer.active { right: 0; }
+        .call-drawer h3 {
+            color: var(--brand-brown);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #f0e6d6;
+            padding-bottom: 10px;
+        }
+        .call-drawer .call-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .call-drawer .call-option:last-child { border-bottom: none; }
+        .call-drawer .call-info h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .call-drawer .call-number {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--brand-brown);
+            text-decoration: none;
+        }
+        .call-drawer .call-now-btn {
+            background: var(--brand-orange);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .close-call-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--brand-brown);
+        }
+
+        .menu-icon { font-size: 24px; cursor: pointer; color: var(--brand-brown); }
+
+        /* ----- SIDE DRAWER (orange hover) ----- */
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0,0,0,0.15);
+            transition: 0.3s;
+            z-index: 4000;
+            padding: 30px 0 20px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 0 0 20px;
+        }
+        .side-drawer.active { right: 0; }
+        .drawer-header { padding: 0 20px 20px; border-bottom: 1px solid #f0e6d6; display: flex; align-items: center; gap: 10px; }
+        .drawer-header img { width: 40px; height: 40px; border-radius: 8px; }
+        .drawer-header h4 { color: var(--brand-brown); font-size: 18px; }
+        .drawer-menu { flex: 1; padding: 20px 0; }
+        .drawer-menu a {
+            display: flex; align-items: center; gap: 15px; padding: 16px 25px;
+            text-decoration: none; color: var(--brand-brown); font-weight: 600;
+            border-bottom: 1px solid #f9f9f9; transition: 0.2s;
+        }
+        .drawer-menu a i { width: 22px; color: var(--brand-orange); }
+        .drawer-menu a:hover {
+            background: var(--brand-orange);
+            color: white;
+            padding-left: 30px;
+        }
+        .drawer-menu a:hover i { color: white; }
+        .drawer-social { padding: 25px 20px 15px; border-top: 1px solid #eee; text-align: center; }
+        .drawer-social p { color: #777; font-size: 13px; margin-bottom: 15px; letter-spacing: 1px; }
+        .social-icons { display: flex; justify-content: center; gap: 25px; }
+        .social-icons a { color: var(--brand-brown); font-size: 24px; transition: 0.2s; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 50%; }
+        .social-icons a:hover { background: var(--brand-orange); color: white; transform: scale(1.1); }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3500; }
+
+        /* ===== PAGE HERO ===== */
+        .services-page-hero {
+            background: linear-gradient(135deg, #fef5e7 0%, #fff7ef 100%);
+            padding: 50px 20px;
+            text-align: center;
+            border-bottom: 1px solid #f0e4d7;
+        }
+        .services-page-hero h1 {
+            font-size: 2.5rem;
+            color: var(--brand-brown);
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+        .services-page-hero p {
+            font-size: 1.1rem;
+            color: #5a4a3a;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .hero-badge {
+            display: inline-block;
+            background: var(--brand-orange);
+            color: white;
+            padding: 6px 18px;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        /* ===== SERVICES GRID ===== */
+        .services-master-section {
+            padding: 70px 20px;
+            background: #ffffff;
+        }
+        .services-container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        .section-intro {
+            text-align: center;
+            margin-bottom: 55px;
+        }
+        .section-intro h2 {
+            font-size: 2rem;
+            color: var(--brand-brown);
+            margin-bottom: 12px;
+        }
+        .section-intro p {
+            color: var(--text-gray);
+            font-size: 1rem;
+        }
+        .services-detailed-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 30px;
+        }
+        .service-detailed-card {
+            background: var(--card-white);
+            border-radius: 28px;
+            padding: 28px 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 25px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+            border: 1px solid #f0e8e0;
+            transition: all 0.3s ease;
+        }
+        .service-detailed-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.08);
+            border-color: var(--brand-orange);
+        }
+        .service-icon-large {
+            flex: 0 0 80px;
+            height: 80px;
+            background: #fef3e6;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            color: var(--brand-orange);
+        }
+        .service-content {
+            flex: 1;
+            min-width: 200px;
+        }
+        .service-title {
+            font-size: 1.65rem;
+            font-weight: 700;
+            color: var(--brand-brown);
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .service-title .specialty-tag {
+            font-size: 0.75rem;
+            background: #eef2f0;
+            color: var(--service-text);
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-weight: 500;
+        }
+        .service-desc {
+            color: #3e3e3e;
+            font-size: 1rem;
+            line-height: 1.5;
+            margin-bottom: 16px;
+        }
+        .focus-area {
+            background: #f9f5ef;
+            padding: 10px 16px;
+            border-radius: 40px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--brand-brown);
+        }
+        .focus-area i {
+            color: var(--brand-orange);
+            font-size: 0.9rem;
+        }
+        .service-list-items {
+            margin-top: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .service-list-items span {
+            background: #f7f7f7;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            color: #4a4a4a;
+        }
+
+        /* ----- APPOINTMENT CTA ----- */
+        .appointment-cta {
+            background: var(--trust-bg-light);
+            padding: 55px 20px;
+            text-align: center;
+            border-top: 1px solid #f0e4d7;
+        }
+        .appointment-cta h3 {
+            font-size: 1.8rem;
+            color: var(--brand-brown);
+            margin-bottom: 15px;
+        }
+        .cta-button {
+            background: var(--brand-orange);
+            color: white;
+            border: none;
+            padding: 14px 40px;
+            font-size: 1rem;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+        }
+        .cta-button:hover {
+            background: #e07d00;
+            transform: scale(1.02);
+        }
+
+        /* ----- FOOTER ----- */
+        .site-footer {
+            position: relative;
+            background: linear-gradient(145deg, #2a1a10 0%, var(--brand-brown) 100%);
+            color: #f0e0d6;
+            padding: 60px 20px 30px;
+            margin-top: 0;
+            border-top: 6px solid var(--brand-orange);
+        }
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1.5fr 1fr;
+            gap: 40px;
+            align-items: start;
+        }
+        .footer-brand { display: flex; flex-direction: column; }
+        .footer-logo-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .footer-logo-wrap img { width: 55px; height: 55px; border-radius: 12px; border: 2px solid var(--brand-orange); }
+        .footer-logo-text { font-size: 28px; font-weight: 800; color: white; line-height: 1.1; }
+        .footer-logo-text small { font-size: 10px; letter-spacing: 3px; color: var(--brand-orange); display: block; }
+        .footer-tagline { color: #ddd; font-size: 14px; margin-bottom: 25px; }
+        .footer-contact p { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .footer-contact i { width: 20px; color: var(--brand-orange); }
+        .footer-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 30px; }
+        .footer-links-column h4 { color: var(--brand-orange); font-size: 16px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; }
+        .footer-links-column ul { list-style: none; }
+        .footer-links-column li { margin-bottom: 12px; }
+        .footer-links-column a { color: #ddd; text-decoration: none; font-size: 14px; transition: 0.2s; display: inline-block; }
+        .footer-links-column a:hover { color: var(--brand-orange); transform: translateX(5px); }
+        .footer-social-col { text-align: right; }
+        .footer-social-col h4 { color: var(--brand-orange); font-size: 16px; margin-bottom: 20px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; }
+        .footer-social-icons { display: flex; gap: 15px; justify-content: flex-end; margin-bottom: 30px; }
+        .footer-social-icons a { background: rgba(255,255,255,0.08); color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: all 0.3s; text-decoration: none; }
+        .footer-social-icons a:hover { background: var(--brand-orange); transform: translateY(-6px); }
+        .newsletter-input { display: flex; background: rgba(255,255,255,0.1); border-radius: 40px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+        .newsletter-input input { background: transparent; border: none; padding: 12px 18px; color: white; width: 100%; outline: none; }
+        .newsletter-input button { background: var(--brand-orange); border: none; padding: 0 20px; color: white; cursor: pointer; }
+        .footer-bottom { max-width: 1200px; margin: 50px auto 0; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; font-size: 13px; }
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: #fff;
+            display: flex; justify-content: space-around; padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000;
+        }
+        .nav-link { text-align: center; text-decoration: none; color: #666; font-size: 10px; width: 25%; }
+        .nav-link i { display: block; font-size: 20px; color: var(--brand-brown); margin-bottom: 3px; }
+        .fa-whatsapp { color: #25D366; } .fa-instagram { color: #E1306C; }
+
+        @media (min-width: 768px) {
+            .services-detailed-grid { grid-template-columns: repeat(2, 1fr); gap: 30px; }
+            .service-detailed-card { flex-direction: row; align-items: flex-start; }
+        }
+        @media (min-width: 992px) {
+            .menu-icon { display: none; }
+            .desktop-nav-links { display: block; }
+            .nav-right { gap: 20px; }
+        }
+        @media (max-width: 767px) {
+            .service-detailed-card { padding: 22px; }
+            .service-title { font-size: 1.35rem; }
+            .services-page-hero h1 { font-size: 1.8rem; }
+            .footer-container { grid-template-columns: 1fr; }
+            .footer-social-col { text-align: left; }
+            .footer-social-col h4 { text-align: left; }
+            .footer-social-icons { justify-content: flex-start; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo-section">
+        <img src="logo.jpeg" alt="Logo" class="logo-img">
+        <div class="logo-text">
+            <strong style="color: var(--brand-brown); font-size: 20px;">Mapare:)</strong>
+            <div style="font-size: 9px; letter-spacing: 2px; color: #888;">DENTAL</div>
+        </div>
+    </div>
+    <div class="desktop-nav-links">
+        <a href="index.html">Home</a>
+        <a href="service.html" style="color: var(--brand-orange);">Treatments</a>
+        <a href="doctors.html">Our Doctors</a>
+        <a href="find-clinic.html">Find Clinic</a>
+    </div>
+    <div class="nav-right">
+        <a href="appointment.html" class="book-btn-header">Book <i class="fas fa-calendar-alt"></i></a>
+        <div class="call-container">
+            <button class="call-btn-header" onclick="toggleCallDrawer()">Call Us <i class="fas fa-chevron-down"></i></button>
+        </div>
+        <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+    </div>
+</nav>
+
+<!-- CALL DRAWER (right side) -->
+<div class="call-drawer" id="callDrawer">
+    <i class="fas fa-times close-call-btn" onclick="closeCallDrawer()"></i>
+    <h3><i class="fas fa-phone-alt"></i> Call Us</h3>
+    <div class="call-option">
+        <div class="call-info"><h4>📞 Clinic</h4><a href="tel:+919067303788" class="call-number"><i class="fas fa-phone-alt"></i> +91 90673 03788</a></div>
+        <a href="tel:+919067303788" class="call-now-btn"><i class="fas fa-phone"></i> Call</a>
+    </div>
+    <div class="call-option">
+        <div class="call-info"><h4>📞 Alternate</h4><a href="tel:+919850685007" class="call-number"><i class="fas fa-phone-alt"></i> +91 98506 85007</a></div>
+        <a href="tel:+919850685007" class="call-now-btn"><i class="fas fa-phone"></i> Call</a>
+    </div>
+    <div class="call-option">
+        <div class="call-info"><h4>🚨 Emergency 24/7</h4><a href="tel:+919764458188" class="call-number"><i class="fas fa-phone-alt"></i> +91 97644 58188</a></div>
+        <a href="tel:+919764458188" class="call-now-btn"><i class="fas fa-phone"></i> Call</a>
+    </div>
+    <div class="call-option">
+        <div class="call-info"><h4>💬 WhatsApp</h4><a href="https://wa.me/919923153953" class="call-number"><i class="fab fa-whatsapp"></i> +91 99231 53953</a></div>
+        <a href="https://wa.me/919923153953" class="call-now-btn"><i class="fab fa-whatsapp"></i> Chat</a>
+    </div>
+</div>
+
+<!-- SIDE DRAWER -->
+<div class="side-drawer" id="sideDrawer">
+    <div class="drawer-header"><img src="logo.jpeg" alt="Mapare"><h4>Mapare Dental</h4></div>
+    <div class="drawer-menu">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="service.html"><i class="fas fa-tooth"></i> Treatments</a>
+        <a href="doctors.html"><i class="fas fa-user-md"></i> Our Doctors</a>
+        <a href="find-clinic.html"><i class="fas fa-map-pin"></i> Find Clinic</a>
+        <a href="appointment.html"><i class="fas fa-calendar-check"></i> Book Appointment</a>
+    </div>
+    <div class="drawer-social">
+        <p>FOLLOW US</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/mapare_dental" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/maparedental" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/@mapare_dental" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/919764458188" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p style="margin-top: 20px; font-size: 12px;">© Mapare Dental · Premium Care</p>
+    </div>
+</div>
+
+<!-- Services Hero -->
+<section class="services-page-hero">
+    <div class="hero-badge"><i class="fas fa-star-of-life"></i> 10+ Specialties</div>
+    <h1>Comprehensive Dental Expertise <br> Under One Roof</h1>
+    <p>From children to elders, from routine cleaning to advanced jaw surgeries — discover precision-driven care across all specialities.</p>
+</section>
+
+<!-- Detailed Services Grid -->
+<section class="services-master-section">
+    <div class="services-container">
+        <div class="section-intro">
+            <h2>Our Clinical Departments</h2>
+            <p>World-class infrastructure & specialist-led treatments tailored for every smile.</p>
+        </div>
+
+        <div class="services-detailed-grid">
+            <!-- 1. Orthodontics -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-smile-wink"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Orthodontics <span class="specialty-tag">Smile & Function</span></div>
+                    <div class="service-desc">Deals with correction of irregular teeth and jaws using advanced techniques.</div>
+                    <div class="service-list-items"><span>Braces</span><span>Invisalign Aligners</span><span>Jaw Alignment</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Smile correction + occlusal harmony</div>
+                </div>
+            </div>
+            <!-- 2. Prosthodontics -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-teeth-open"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Prosthodontics <span class="specialty-tag">Replacement</span></div>
+                    <div class="service-desc">Replacement of missing teeth with lifelike prosthetics for function & aesthetics.</div>
+                    <div class="service-list-items"><span>Dentures</span><span>Crowns & Bridges</span><span>Dental Implants</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Oral rehabilitation & aesthetic restoration</div>
+                </div>
+            </div>
+            <!-- 3. Periodontics -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-gum"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Periodontics <span class="specialty-tag">Gum Health</span></div>
+                    <div class="service-desc">Treatment of gums and supporting bone structures for long-term stability.</div>
+                    <div class="service-list-items"><span>Gum Disease Therapy</span><span>Scaling & Root Planing</span><span>Flap Surgery</span><span>Dental Implants</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Gum health & periodontal regeneration</div>
+                </div>
+            </div>
+            <!-- 4. Endodontics -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-microscope"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Endodontics <span class="specialty-tag">Root Canal</span></div>
+                    <div class="service-desc">Treatment of dental pulp to relieve pain and save natural teeth.</div>
+                    <div class="service-list-items"><span>Root Canal Treatment (RCT)</span><span>Pulp Therapy</span><span>Micro-endodontics</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Saving natural teeth, pain-free therapy</div>
+                </div>
+            </div>
+            <!-- 5. Oral and Maxillofacial Surgery -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-scalpel"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Oral & Maxillofacial Surgery <span class="specialty-tag">Surgical Care</span></div>
+                    <div class="service-desc">Surgical procedures of mouth, jaw, and facial region.</div>
+                    <div class="service-list-items"><span>Tooth Extraction</span><span>Wisdom Teeth Removal</span><span>Fracture Treatment</span><span>Tumor/Cyst Excision</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Minor to major oral surgeries with safety</div>
+                </div>
+            </div>
+            <!-- 6. Pedodontics -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-baby-carriage"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Pedodontics <span class="specialty-tag">Kids Dentistry</span></div>
+                    <div class="service-desc">Specialized dental care for children and adolescents in a friendly environment.</div>
+                    <div class="service-list-items"><span>Habit Correction</span><span>Preventive Care</span><span>Pediatric Fillings</span><span>Space Maintainers</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Child-friendly & anxiety-free dentistry</div>
+                </div>
+            </div>
+            <!-- 7. Oral Medicine and Radiology -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-x-ray"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Oral Medicine & Radiology <span class="specialty-tag">Diagnosis</span></div>
+                    <div class="service-desc">Advanced imaging and diagnosis of oral diseases and lesions.</div>
+                    <div class="service-list-items"><span>Digital X-rays</span><span>Oral Lesion Diagnosis</span><span>Precancerous Screening</span><span>CBCT</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Early detection & medical management</div>
+                </div>
+            </div>
+            <!-- 8. Public Health Dentistry -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-users"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Public Health Dentistry <span class="specialty-tag">Community Care</span></div>
+                    <div class="service-desc">Population-level oral health initiatives and preventive strategies.</div>
+                    <div class="service-list-items"><span>Awareness Camps</span><span>Prevention Programs</span><span>School Dental Health</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Community oral health & education</div>
+                </div>
+            </div>
+            <!-- 9. Conservative Dentistry -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-fill-drip"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Conservative Dentistry <span class="specialty-tag">Tooth Preservation</span></div>
+                    <div class="service-desc">Restoration of teeth with aesthetic and durable materials.</div>
+                    <div class="service-list-items"><span>Tooth-Colored Fillings</span><span>Aesthetic Restorations</span><span>Inlays/Onlays</span><span>Root Canal Treatments</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Preserving natural tooth structure</div>
+                </div>
+            </div>
+            <!-- 10. Oral Pathology -->
+            <div class="service-detailed-card">
+                <div class="service-icon-large"><i class="fas fa-dna"></i></div>
+                <div class="service-content">
+                    <div class="service-title">Oral Pathology <span class="specialty-tag">Microscopic Diagnosis</span></div>
+                    <div class="service-desc">Study and diagnosis of oral diseases at cellular level.</div>
+                    <div class="service-list-items"><span>Biopsy Services</span><span>Tumor/Cyst Analysis</span><span>Histopathology</span></div>
+                    <div class="focus-area"><i class="fas fa-bullseye"></i> Focus: Accurate disease identification & research</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Appointment CTA -->
+<section class="appointment-cta">
+    <h3>Ready to experience specialized care?</h3>
+    <a href="appointment.html" class="cta-button"><i class="fas fa-calendar-check"></i> Book Your Consultation</a>
+    <p style="margin-top: 18px; font-size: 0.9rem; color: #6b5a4a;">Same-day appointments · Insurance & EMI options</p>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo-wrap"><img src="logo.jpeg" alt="Mapare Dental"><div class="footer-logo-text">Mapare:)<small>DENTAL</small></div></div>
+            <p class="footer-tagline">Premium dental care with a legacy of trust. Transforming smiles since 1999.</p>
+            <div class="footer-contact">
+                <p><i class="fas fa-phone-alt"></i> +91 90673 03788 (Clinic)</p>
+                <p><i class="fas fa-phone-alt"></i> +91 98506 85007 (Alternate)</p>
+                <p><i class="fas fa-ambulance"></i> +91 97644 58188 (Emergency 24/7)</p>
+                <p><i class="fab fa-whatsapp"></i> +91 99231 53953 (WhatsApp)</p>
+                <p><i class="fas fa-envelope"></i> sagarmapare@gmail.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Nanded, Maharashtra</p>
+            </div>
+        </div>
+        <div class="footer-links-grid">
+            <div class="footer-links-column"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="service.html">Treatments</a></li><li><a href="doctors.html">Our Doctors</a></li><li><a href="find-clinic.html">Find Clinic</a></li><li><a href="appointment.html">Book Appointment</a></li></ul></div>
+            <div class="footer-links-column"><h4>Services</h4><ul><li><a href="service.html">Dental Implants</a></li><li><a href="service.html">Root Canal</a></li><li><a href="service.html">Invisalign</a></li><li><a href="service.html">Teeth Whitening</a></li><li><a href="service.html">Kids Dental</a></li></ul></div>
+            <div class="footer-links-column"><h4>Support</h4><ul><li><a href="#">FAQs</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li><li><a href="#">Contact Us</a></li><li><a href="#">EMI Options</a></li></ul></div>
+        </div>
+        <div class="footer-social-col"><h4>Connect With Us</h4><div class="footer-social-icons">
+            <a href="https://www.instagram.com/mapare_dental" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/maparedental" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/@mapare_dental" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/919764458188" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div><div class="footer-newsletter"><p>Subscribe for oral health tips</p><div class="newsletter-input"><input type="email" placeholder="Your email"><button><i class="fas fa-paper-plane"></i></button></div></div></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 Mapare Dental Hospital. All rights reserved.</div><div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a></div></div>
+</footer>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="appointment.html" class="nav-link"><i class="fas fa-calendar-check"></i>Appointment</a>
+    <a href="https://wa.me/919764458188" class="nav-link"><i class="fab fa-whatsapp"></i>Whatsapp</a>
+    <a href="tel:+919923153953" class="nav-link"><i class="fas fa-phone-alt"></i>Callback</a>
+    <a href="https://www.instagram.com/mapare_dental" target="_blank" class="nav-link"><i class="fab fa-instagram"></i>Instagram</a>
+</nav>
+
+<script>
+    function toggleCallDrawer() {
+        const drawer = document.getElementById('callDrawer');
+        drawer.classList.toggle('active');
+        document.getElementById('overlay').style.display = drawer.classList.contains('active') ? 'block' : 'none';
+    }
+    function closeCallDrawer() {
+        document.getElementById('callDrawer').classList.remove('active');
+        document.getElementById('overlay').style.display = 'none';
+    }
+    function toggleMenu() {
+        const drawer = document.getElementById('sideDrawer');
+        drawer.classList.toggle('active');
+        document.getElementById('overlay').style.display = drawer.classList.contains('active') ? 'block' : 'none';
+    }
+    function closeAll() {
+        document.getElementById('sideDrawer').classList.remove('active');
+        document.getElementById('callDrawer').classList.remove('active');
+        document.getElementById('overlay').style.display = 'none';
+    }
+    document.querySelectorAll('.drawer-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('sideDrawer').classList.remove('active');
+            document.getElementById('overlay').style.display = 'none';
+        });
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,782 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Mapare Dental · Premium Care & Smile Stories</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* ===== COLOR SCHEME ===== */
+        :root {
+            --brand-brown: #4a2c1d;
+            --brand-orange: #f39200;
+            --bg-light: #fdfdfd;
+            --text-gray: #666;
+            --service-bg: #f0f7f7;
+            --service-text: #004d40;
+            --service-card-bg: #ffffff;
+            --trust-bg-light: #fef9f2;
+            --card-white: #ffffff;
+            --trust-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --review-card-bg: #fffbf7;
+            --review-border: #f0e4d7;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding-top: 70px;
+            overflow-x: hidden;
+            background-color: var(--bg-light);
+        }
+
+        /* ----- NAVBAR ----- */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            height: 70px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 1000;
+            border-bottom: 1px solid #eee;
+        }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo-img { height: 45px; width: auto; border-radius: 4px; }
+        .nav-right { display: flex; align-items: center; gap: 10px; }
+        .desktop-nav-links { display: none; }
+        .desktop-nav-links a { 
+            text-decoration: none; 
+            color: var(--brand-brown); 
+            font-weight: bold; 
+            font-size: 14px; 
+            margin: 0 12px;
+            transition: 0.2s;
+        }
+        .desktop-nav-links a:hover {
+            color: var(--brand-orange);
+        }
+        .call-btn-header, .book-btn-header {
+            color: white; padding: 8px 12px; border-radius: 4px; text-decoration: none;
+            font-size: 13px; cursor: pointer; border: none; display: flex; align-items: center;
+            gap: 5px; font-weight: bold; white-space: nowrap;
+        }
+        .call-btn-header { background: var(--brand-brown); }
+        .book-btn-header { background: var(--brand-orange); }
+
+        /* Call dropdown - right side drawer for mobile, absolute for desktop */
+        .call-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0,0,0,0.15);
+            transition: 0.3s;
+            z-index: 4000;
+            padding: 70px 20px 30px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 0 0 20px;
+        }
+        .call-drawer.active { right: 0; }
+        .call-drawer h3 {
+            color: var(--brand-brown);
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 1px solid #f0e6d6;
+            padding-bottom: 10px;
+        }
+        .call-drawer .call-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        .call-drawer .call-option:last-child { border-bottom: none; }
+        .call-drawer .call-info h4 {
+            font-size: 14px;
+            color: #333;
+            margin-bottom: 4px;
+        }
+        .call-drawer .call-number {
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--brand-brown);
+            text-decoration: none;
+        }
+        .call-drawer .call-now-btn {
+            background: var(--brand-orange);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .close-call-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--brand-brown);
+        }
+
+        .menu-icon { font-size: 24px; cursor: pointer; color: var(--brand-brown); }
+
+        /* ----- SIDE DRAWER ----- */
+        .side-drawer {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 280px;
+            height: 100%;
+            background: white;
+            box-shadow: -2px 0 20px rgba(0,0,0,0.15);
+            transition: 0.3s;
+            z-index: 4000;
+            padding: 30px 0 20px;
+            display: flex;
+            flex-direction: column;
+            border-radius: 20px 0 0 20px;
+        }
+        .side-drawer.active { right: 0; }
+        .drawer-header { padding: 0 20px 20px; border-bottom: 1px solid #f0e6d6; display: flex; align-items: center; gap: 10px; }
+        .drawer-header img { width: 40px; height: 40px; border-radius: 8px; }
+        .drawer-header h4 { color: var(--brand-brown); font-size: 18px; }
+        .drawer-menu { flex: 1; padding: 20px 0; }
+        .drawer-menu a {
+            display: flex; align-items: center; gap: 15px; padding: 16px 25px;
+            text-decoration: none; color: var(--brand-brown); font-weight: 600;
+            border-bottom: 1px solid #f9f9f9; transition: 0.2s;
+        }
+        .drawer-menu a i { width: 22px; color: var(--brand-orange); }
+        .drawer-menu a:hover {
+            background: var(--brand-orange);
+            color: white;
+            padding-left: 30px;
+        }
+        .drawer-menu a:hover i { color: white; }
+        .drawer-social { padding: 25px 20px 15px; border-top: 1px solid #eee; text-align: center; }
+        .drawer-social p { color: #777; font-size: 13px; margin-bottom: 15px; letter-spacing: 1px; }
+        .social-icons { display: flex; justify-content: center; gap: 25px; }
+        .social-icons a { color: var(--brand-brown); font-size: 24px; transition: 0.2s; width: 45px; height: 45px; display: flex; align-items: center; justify-content: center; background: #f5f5f5; border-radius: 50%; }
+        .social-icons a:hover { background: var(--brand-orange); color: white; transform: scale(1.1); }
+        .overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 3500; }
+
+        /* ----- HERO SECTION ----- */
+        .hero-container { display: flex; flex-direction: column; width: 100%; }
+        .hero-slider { position: relative; width: 100%; overflow: hidden; background: #000; }
+        .slider-wrapper { display: flex; transition: transform 0.5s ease-in-out; }
+        .slider-wrapper img { width: 100%; flex-shrink: 0; display: block; }
+        .slider-btn {
+            position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.4);
+            color: white; border: none; padding: 12px; cursor: pointer; z-index: 10;
+            border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
+        }
+        .btn-next { right: 10px; } .btn-prev { left: 10px; }
+        .hero-info { display: none; padding: 30px 20px; background: white; flex-direction: column; justify-content: center; }
+        .hero-info h1 { font-size: 24px; color: #222; margin: 0 0 15px; }
+        .rating-box { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+        .rating-box img { width: 30px; } .stars { color: var(--brand-orange); font-size: 18px; }
+        .info-item { display: flex; gap: 12px; margin-bottom: 15px; color: #444; font-size: 15px; }
+        .info-item i { color: var(--brand-orange); margin-top: 3px; }
+        .get-directions { color: var(--brand-orange); font-weight: bold; text-decoration: none; border-bottom: 1px solid var(--brand-orange); align-self: flex-start; }
+
+        /* ----- MARQUEE ----- */
+        .marquee-container { background: #fff; padding: 12px 0; border-bottom: 1px solid #eee; overflow: hidden; white-space: nowrap; }
+        .marquee-content { display: inline-block; animation: scroll 20s linear infinite; }
+        .marquee-item { display: inline-block; margin: 0 30px; font-weight: bold; color: #555; }
+        .marquee-item span { color: var(--brand-orange); }
+        @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+        /* ----- APPOINTMENT FORM (Book now button brown) ----- */
+        .appointment-section { padding: 40px 15px; background: #fffef5; max-width: 1200px; margin: 0 auto; border-bottom: 1px solid #f9e8d0; }
+        .appointment-section h2 { color: var(--brand-brown); text-align: center; margin-bottom: 25px; font-size: 22px; }
+        .booking-form { display: grid; grid-template-columns: 1fr; gap: 15px; }
+        .form-group input, .form-group select { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; }
+        .book-btn {
+            background: var(--brand-brown);  /* Changed to match call us button */
+            color: white;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .book-btn:hover { background: #5a3a28; transform: scale(1.01); }
+
+        /* ----- SERVICES QUICK ICONS ----- */
+        .services-section { padding: 50px 15px; background-color: var(--service-bg); }
+        .services-section h2 { text-align: center; color: var(--service-text); font-size: 24px; margin-bottom: 30px; }
+        .services-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-width: 1200px; margin: 0 auto; }
+        .service-card { background: var(--service-card-bg); padding: 25px 10px; text-align: center; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); border: 1px solid rgba(0,77,64,0.1); }
+        .service-card i { font-size: 30px; color: var(--service-text); margin-bottom: 12px; }
+        .service-card h3 { font-size: 14px; margin: 0; color: var(--service-text); font-weight: bold; }
+
+        /* ===== HORIZONTAL VIDEO SECTION (click to play with sound) ===== */
+        .insta-video-section { padding: 60px 0 50px; background: #ffffff; }
+        .insta-container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .insta-header { text-align: left; margin-bottom: 25px; }
+        .insta-header h2 { font-size: 2rem; font-weight: 700; color: var(--brand-brown); display: flex; align-items: center; gap: 10px; }
+        .insta-header h2 i { color: #E1306C; font-size: 2rem; }
+        .insta-subhead { color: #555; font-size: 1rem; margin-top: 6px; display: flex; align-items: center; gap: 10px; }
+        .insta-badge { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: white; padding: 4px 12px; border-radius: 30px; font-size: 0.85rem; font-weight: 600; margin-left: 10px; }
+        .video-scroll-container { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 20px; padding: 15px 5px 30px; -webkit-overflow-scrolling: touch; scrollbar-width: thin; scrollbar-color: var(--brand-orange) #f0f0f0; }
+        .video-scroll-container::-webkit-scrollbar { height: 6px; }
+        .video-scroll-container::-webkit-scrollbar-thumb { background: var(--brand-orange); border-radius: 20px; }
+        .insta-video-card { flex: 0 0 300px; scroll-snap-align: start; position: relative; aspect-ratio: 9 / 16; background-color: #1e1e1e; border-radius: 20px; overflow: hidden; box-shadow: 0 12px 24px rgba(0,0,0,0.15); transition: transform 0.2s; cursor: pointer; }
+        .insta-video-card:hover { transform: scale(1.02); }
+        .insta-video-card video { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .insta-play-icon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: rgba(0,0,0,0.6); backdrop-filter: blur(6px); border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 2px solid rgba(255,255,255,0.8); pointer-events: none; transition: 0.2s; z-index: 3; }
+        .insta-play-icon i { color: white; font-size: 28px; margin-left: 4px; }
+        .insta-video-card.playing .insta-play-icon { opacity: 0; }
+        .insta-info-overlay { position: absolute; bottom: 0; left: 0; width: 100%; padding: 25px 15px 18px; background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%); text-align: center; z-index: 2; pointer-events: none; }
+        .insta-banner { background: var(--brand-brown); color: white; font-size: 15px; font-weight: 700; padding: 8px 5px; width: 100%; text-transform: uppercase; letter-spacing: 1px; display: block; border-radius: 40px; margin-bottom: 8px; }
+        .insta-doctor { color: var(--brand-orange); font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .insta-handle { color: #ccc; font-size: 12px; margin-top: 5px; }
+
+        /* ----- TRUST SECTION ----- */
+        .trust-section { background-color: var(--trust-bg-light); padding: 60px 0; }
+        .trust-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .trust-header { text-align: center; margin-bottom: 50px; }
+        .trust-header h2 { font-size: 2.2rem; color: var(--brand-brown); font-weight: 700; }
+        .trust-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 30px; align-items: stretch; }
+        .trust-image-wrapper { background: #e1f0ff; border-radius: 20px; overflow: hidden; display: flex; align-items: center; justify-content: center; box-shadow: var(--trust-shadow); }
+        .trust-image-wrapper img { width: 100%; height: 100%; object-fit: cover; display: block; }
+        .cards-wrapper { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+        .card-container { perspective: 1000px; height: 300px; cursor: pointer; }
+        .card-inner { position: relative; width: 100%; height: 100%; text-align: left; transition: transform 0.6s; transform-style: preserve-3d; }
+        .card-input { display: none; }
+        .card-input:checked + .card-inner { transform: rotateY(180deg); }
+        .card-front, .card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; padding: 30px 20px; background: var(--card-white); border: 1px solid #edf2f7; display: flex; flex-direction: column; }
+        .card-back { background-color: var(--brand-brown); color: white; transform: rotateY(180deg); }
+        .card-title { font-size: 1.15rem; color: var(--brand-brown); font-weight: 700; margin-bottom: 15px; padding-bottom: 8px; position: relative; }
+        .card-title::after { content: ''; position: absolute; left: 0; bottom: 0; width: 50px; height: 3px; background: var(--brand-orange); }
+        .card-back .card-title { color: var(--brand-orange); }
+        .card-list { list-style: none; font-size: 0.95rem; color: #4a5568; line-height: 1.5; }
+        .card-list li { margin-bottom: 10px; padding-left: 18px; position: relative; }
+        .card-list li::before { content: "•"; color: var(--brand-orange); position: absolute; left: 0; font-weight: bold; }
+        .card-back .card-list { color: white; }
+        .btn-mini { font-size: 0.8rem; color: var(--brand-orange); text-transform: uppercase; letter-spacing: 1px; font-weight: bold; margin-top: auto; }
+
+        /* ----- GOOGLE REVIEWS SECTION ----- */
+        .reviews-section { padding: 60px 0; background-color: #ffffff; }
+        .reviews-container { max-width: 1300px; margin: 0 auto; padding: 0 20px; }
+        .reviews-header { text-align: center; margin-bottom: 40px; }
+        .reviews-header h2 { font-size: 2.2rem; color: var(--brand-brown); font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 15px; }
+        .reviews-header h2 i { color: #4285F4; }
+        .reviews-viewport { width: 100%; overflow-x: auto; overflow-y: hidden; padding-bottom: 30px; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .reviews-viewport::-webkit-scrollbar { height: 8px; }
+        .reviews-viewport::-webkit-scrollbar-thumb { background: var(--brand-orange); border-radius: 10px; }
+        .reviews-row { display: flex; align-items: stretch; min-width: max-content; max-width: 1300px; margin: 0 auto; padding: 20px 0; gap: 30px; }
+        .reviews-summary { width: 280px; flex-shrink: 0; text-align: center; border-right: 2px solid #e0e6ed; padding-right: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .google-logo-large { width: 70px; height: auto; margin-bottom: 20px; }
+        .summary-stats h3 { font-size: 1.8rem; color: var(--brand-brown); margin-bottom: 5px; font-weight: 800; }
+        .summary-stats p { color: var(--text-gray); font-size: 0.9rem; margin-bottom: 12px; }
+        .stars-row { color: var(--brand-orange); font-size: 1.3rem; margin-bottom: 15px; }
+        .avg-text { font-size: 1.2rem; font-weight: 700; color: var(--brand-brown); }
+        .review-card { width: 360px; flex-shrink: 0; background: var(--review-card-bg); border: 1px solid var(--review-border); border-radius: 25px; padding: 40px 30px; position: relative; box-shadow: 0 4px 15px rgba(0,0,0,0.02); transition: all 0.4s; display: flex; flex-direction: column; }
+        .review-card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.07); border-color: var(--brand-orange); background: #ffffff; }
+        .card-corner { position: absolute; top: 0; right: 0; width: 70px; height: 70px; background: #fef0d7; border-radius: 0 0 0 100%; display: flex; justify-content: flex-end; padding: 12px; }
+        .card-corner img { width: 20px; height: 20px; object-fit: contain; }
+        .user-info { text-align: center; margin-bottom: 20px; }
+        .avatar { width: 70px; height: 70px; background: #fff; border: 2px solid #eee; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px; font-weight: 800; font-size: 1.4rem; color: var(--brand-brown); }
+        .user-name { font-weight: 700; color: var(--brand-brown); font-size: 1.15rem; margin-bottom: 8px; }
+        .card-stars { color: var(--brand-orange); font-size: 0.9rem; }
+        .review-text { color: #4a5568; font-size: 1rem; line-height: 1.7; text-align: center; font-style: italic; }
+
+        /* ===== FOOTER ===== */
+        .site-footer {
+            position: relative;
+            background: linear-gradient(145deg, #2a1a10 0%, var(--brand-brown) 100%);
+            color: #f0e0d6;
+            padding: 60px 20px 30px;
+            margin-top: 20px;
+            border-top: 6px solid var(--brand-orange);
+        }
+        .site-footer::before {
+            content: "";
+            position: absolute;
+            top: -2px;
+            left: 0;
+            width: 100%;
+            height: 20px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23f39200" fill-opacity="0.3" d="M0,192L48,197.3C96,203,192,213,288,208C384,203,480,181,576,181.3C672,181,768,203,864,213.3C960,224,1056,224,1152,208C1248,192,1344,160,1392,144L1440,128L1440,0L1392,0C1344,0,1248,0,1152,0C1056,0,960,0,864,0C768,0,672,0,576,0C480,0,384,0,288,0C192,0,96,0,48,0L0,0Z"></path></svg>') repeat-x;
+            background-size: cover;
+            opacity: 0.5;
+        }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1.5fr 1fr; gap: 40px; align-items: start; }
+        .footer-brand { display: flex; flex-direction: column; }
+        .footer-logo-wrap { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+        .footer-logo-wrap img { width: 55px; height: 55px; border-radius: 12px; border: 2px solid var(--brand-orange); }
+        .footer-logo-text { font-size: 28px; font-weight: 800; color: white; line-height: 1.1; }
+        .footer-logo-text small { font-size: 10px; letter-spacing: 3px; color: var(--brand-orange); display: block; }
+        .footer-tagline { color: #ddd; font-size: 14px; margin-bottom: 25px; }
+        .footer-contact p { margin-bottom: 12px; display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .footer-contact i { width: 20px; color: var(--brand-orange); }
+        .footer-links-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px 30px; }
+        .footer-links-column h4 { color: var(--brand-orange); font-size: 16px; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; }
+        .footer-links-column ul { list-style: none; }
+        .footer-links-column li { margin-bottom: 12px; }
+        .footer-links-column a { color: #ddd; text-decoration: none; font-size: 14px; transition: 0.2s; display: inline-block; }
+        .footer-links-column a:hover { color: var(--brand-orange); transform: translateX(5px); }
+        .footer-social-col { text-align: right; }
+        .footer-social-col h4 { color: var(--brand-orange); font-size: 16px; margin-bottom: 20px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.2); padding-bottom: 8px; }
+        .footer-social-icons { display: flex; gap: 15px; justify-content: flex-end; margin-bottom: 30px; }
+        .footer-social-icons a { background: rgba(255,255,255,0.08); color: white; width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; transition: all 0.3s; text-decoration: none; }
+        .footer-social-icons a:hover { background: var(--brand-orange); transform: translateY(-6px); }
+        .newsletter-input { display: flex; background: rgba(255,255,255,0.1); border-radius: 40px; overflow: hidden; border: 1px solid rgba(255,255,255,0.2); }
+        .newsletter-input input { background: transparent; border: none; padding: 12px 18px; color: white; width: 100%; outline: none; }
+        .newsletter-input button { background: var(--brand-orange); border: none; padding: 0 20px; color: white; cursor: pointer; }
+        .footer-bottom { max-width: 1200px; margin: 50px auto 0; padding-top: 30px; border-top: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; font-size: 13px; }
+        .bottom-nav {
+            position: fixed; bottom: 0; width: 100%; background: #fff;
+            display: flex; justify-content: space-around; padding: 10px 0;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05); z-index: 1000;
+        }
+        .nav-link { text-align: center; text-decoration: none; color: #666; font-size: 10px; width: 25%; }
+        .nav-link i { display: block; font-size: 20px; color: var(--brand-brown); margin-bottom: 3px; }
+        .fa-whatsapp { color: #25D366; } .fa-instagram { color: #E1306C; }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .trust-grid { grid-template-columns: 1fr; }
+            .trust-image-wrapper { height: 250px; }
+            .cards-wrapper { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 15px; padding: 10px 0 30px; }
+            .card-container { min-width: 280px; flex-shrink: 0; scroll-snap-align: center; height: 320px; }
+        }
+        @media (max-width: 900px) {
+            .footer-container { grid-template-columns: 1fr; gap: 30px; }
+            .footer-social-col { text-align: left; }
+            .footer-social-col h4 { text-align: left; }
+            .footer-social-icons { justify-content: flex-start; }
+            .footer-bottom { flex-direction: column; text-align: center; }
+        }
+        @media (max-width: 768px) {
+            .reviews-summary { width: 220px; padding-right: 20px; }
+            .review-card { width: 300px; padding: 30px 20px; }
+            .summary-stats h3 { font-size: 1.5rem; }
+            .avatar { width: 60px; height: 60px; font-size: 1.2rem; }
+        }
+        @media (min-width: 992px) {
+            .menu-icon { display: none; }
+            .desktop-nav-links { display: block; }
+            .nav-right { gap: 20px; }
+            .hero-container { flex-direction: row; height: 450px; background: white; }
+            .hero-slider { width: 50%; height: 100%; }
+            .slider-wrapper, .slider-wrapper img { height: 100%; object-fit: cover; }
+            .hero-info { display: flex; width: 50%; padding: 0 60px; }
+            .hero-info h1 { font-size: 32px; }
+            .services-grid { grid-template-columns: repeat(4, 1fr); gap: 20px; }
+            .booking-form { grid-template-columns: 1fr 1fr; gap: 20px; }
+            .book-btn { grid-column: span 2; width: 200px; margin: 0 auto; }
+            .navbar { padding: 0 5%; }
+            .insta-video-card { flex: 0 0 320px; }
+        }
+        @media (max-width: 600px) {
+            .insta-video-card { flex: 0 0 260px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- NAVBAR -->
+<nav class="navbar">
+    <div class="logo-section">
+        <img src="logo.jpeg" alt="Logo" class="logo-img">
+        <div class="logo-text">
+            <strong style="color: var(--brand-brown); font-size: 20px;">Mapare:)</strong>
+            <div style="font-size: 9px; letter-spacing: 2px; color: #888;">DENTAL</div>
+        </div>
+    </div>
+    <div class="desktop-nav-links">
+        <a href="index.html">Home</a>
+        <a href="service.html">Treatments</a>
+        <a href="doctors.html">Our Doctors</a>
+        <a href="find-clinic.html">Find Clinic</a>
+    </div>
+    <div class="nav-right">
+        <a href="appointment.html" class="book-btn-header">Book <i class="fas fa-calendar-alt"></i></a>
+        <div class="call-container">
+            <button class="call-btn-header" onclick="toggleCallDrawer()">Call Us <i class="fas fa-chevron-down"></i></button>
+        </div>
+        <i class="fas fa-bars menu-icon" onclick="toggleMenu()"></i>
+    </div>
+</nav>
+
+<!-- CALL DRAWER (right side drawer for calls) -->
+<div class="call-drawer" id="callDrawer">
+    <i class="fas fa-times close-call-btn" onclick="closeCallDrawer()"></i>
+    <h3><i class="fas fa-phone-alt"></i> Call Us</h3>
+    <div class="call-option">
+        <div class="call-info"><h4>📞 Clinic</h4><a href="tel:+919067303788" class="call-number"><i class="fas fa-phone-alt"></i> +91 90673 03788</a></div>
+        <a href="tel:+919067303788" class="call-now-btn"><i class="fas fa-phone"></i> Call</a>
+    </div>
+    <div class="call-option">
+        <div class="call-info"><h4>📞 Alternate</h4><a href="tel:+919850685007" class="call-number"><i class="fas fa-phone-alt"></i> +91 98506 85007</a></div>
+        <a href="tel:+919850685007" class="call-now-btn"><i class="fas fa-phone"></i> Call</a>
+    </div>
+    <div class="call-option">
+        <div class="call-info"><h4>🚨 Emergency 24/7</h4><a href="tel:+919764458188" class="call-number"><i class="fas fa-phone-alt"></i> +91 97644 58188</a></div>
+        <a href="tel:+919764458188" class="call-now-btn"><i class="fas fa-phone"></i> Call</a>
+    </div>
+    <div class="call-option">
+        <div class="call-info"><h4>💬 WhatsApp</h4><a href="https://wa.me/919923153953" class="call-number"><i class="fab fa-whatsapp"></i> +91 99231 53953</a></div>
+        <a href="https://wa.me/919923153953" class="call-now-btn"><i class="fab fa-whatsapp"></i> Chat</a>
+    </div>
+</div>
+
+<!-- SIDE DRAWER -->
+<div class="side-drawer" id="sideDrawer">
+    <div class="drawer-header"><img src="logo.jpeg" alt="Mapare"><h4>Mapare Dental</h4></div>
+    <div class="drawer-menu">
+        <a href="index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="service.html"><i class="fas fa-tooth"></i> Treatments</a>
+        <a href="doctors.html"><i class="fas fa-user-md"></i> Our Doctors</a>
+        <a href="find-clinic.html"><i class="fas fa-map-pin"></i> Find Clinic</a>
+        <a href="appointment.html"><i class="fas fa-calendar-check"></i> Book Appointment</a>
+    </div>
+    <div class="drawer-social">
+        <p>FOLLOW US</p>
+        <div class="social-icons">
+            <a href="https://www.instagram.com/mapare_dental" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/maparedental" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/@mapare_dental" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/919764458188" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div>
+        <p style="margin-top: 20px; font-size: 12px;">© Mapare Dental · Premium Care</p>
+    </div>
+</div>
+
+<!-- HERO SECTION (Nanded) -->
+<div class="hero-container">
+    <div class="hero-slider">
+        <button class="slider-btn btn-prev" onclick="moveSlider(-1)"><i class="fas fa-chevron-left"></i></button>
+        <div class="slider-wrapper" id="sliderWrapper">
+            <img src="Hero1.jpeg" alt="Hero 1">
+            <img src="Hero2.jpeg" alt="Hero 2">
+            <img src="Hero3.jpeg" alt="Hero 3">
+        </div>
+        <button class="slider-btn btn-next" onclick="moveSlider(1)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="hero-info">
+        <h1>Best Dental Clinic in Nanded</h1>
+        <div class="rating-box">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/c/c1/Google_Color_Logo.svg" alt="G">
+            <div><div style="font-weight: bold;">4.9/5 Average Rating</div><div class="stars">★★★★★</div></div>
+        </div>
+        <div class="info-item"><i class="far fa-clock"></i><span>Mon-Sat: 9:00 AM – 9:00 PM | Sun: 9:00 AM – 2:00 PM</span></div>
+        <div class="info-item"><i class="fas fa-map-marker-alt"></i><span>Doctor Mapare Building, Infront Of Lotus Hospital, Doctor Lane, opposite Lotus Hospital, Khadakpura, Vazirabad, Nanded, Maharashtra 431601</span></div>
+        <a href="https://www.google.com/maps/dir//Mapare+Dental+Hospital,+Doctor+Mapare+Building,+Infront+Of+Lotus+Hospital,+Doctor+Lane,+opposite+Lotus+Hospital,+Doctor+Lane,+Khadakpura,+Vazirabad,+Nanded,+Maharashtra+431601/@19.1723878,77.2429553,13z/data=!4m17!1m8!3m7!1s0x3bd1d6682ba34595:0x3723a4f89a6f293f!2sMapare+Dental+Hospital!8m2!3d19.1575329!4d77.308727!15sChptYXBhcmUgZGVudGFsIGhvc3BpdGFsIGFuYVocIhptYXBhcmUgZGVudGFsIGhvc3BpdGFsIGFuYZIBB2RlbnRpc3SaASRDaGREU1VoTk1HOW5TMFZKUTBGblNVUlFlVXBEZEhSUlJSQULgAQD6AQUIlgIQPw!16s%2Fg%2F11c1p2rks0!4m7!1m0!1m5!1m1!1s0x3bd1d6682ba34595:0x3723a4f89a6f293f!2m2!1d77.308727!2d19.1575329?entry=ttu&g_ep=EgoyMDI2MDQxMy4wIKXMDSoASAFQAw%3D%3D" target="_blank" class="get-directions">Get Directions</a>
+    </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee-container">
+    <div class="marquee-content">
+        <div class="marquee-item"><span>1L+</span> Happy patients</div>
+        <div class="marquee-item"><span>3+</span> Clinics</div>
+        <div class="marquee-item"><span>27+</span> Years Exp</div>
+        <div class="marquee-item"><span>4.9/5</span> Rating</div>
+        <div class="marquee-item"><span>1L+</span> Happy patients</div>
+        <div class="marquee-item"><span>3+</span> Clinics</div>
+    </div>
+</div>
+
+<!-- APPOINTMENT FORM (Book now button brown) -->
+<section class="appointment-section">
+    <h2>Book Your Appointment</h2>
+    <form id="homeAppointmentForm" class="booking-form">
+        <div class="form-group"><input type="text" id="homeName" placeholder="Your Name" required></div>
+        <div class="form-group"><input type="tel" id="homeMobile" placeholder="Mobile Number" required></div>
+        <div class="form-group">
+            <select id="homeTime" required>
+                <option value="" disabled selected>Select Preferred Time</option>
+                <option>9:00 AM - 11:00 AM</option>
+                <option>11:00 AM - 1:00 PM</option>
+                <option>1:00 PM - 3:00 PM</option>
+                <option>3:00 PM - 5:00 PM</option>
+                <option>5:00 PM - 7:00 PM</option>
+                <option>7:00 PM - 9:00 PM</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <select id="homeTreatment" required>
+                <option value="" disabled selected>Select Treatment</option>
+                <option>Orthodontics (Braces/Aligners)</option>
+                <option>Prosthodontics (Dentures/Crowns/Bridges/Implants)</option>
+                <option>Periodontics (Gum Treatment)</option>
+                <option>Endodontics (Root Canal Treatment)</option>
+                <option>Oral & Maxillofacial Surgery</option>
+                <option>Pedodontics (Kids Dentistry)</option>
+                <option>Oral Medicine & Radiology</option>
+                <option>Public Health Dentistry</option>
+                <option>Conservative Dentistry & Aesthetic Restorations</option>
+                <option>Oral Pathology & Biopsy</option>
+            </select>
+        </div>
+        <button type="submit" class="book-btn">BOOK NOW</button>
+    </form>
+</section>
+
+<!-- SERVICES QUICK ICONS -->
+<section class="services-section">
+    <h2>How can we Help u today?</h2>
+    <div class="services-grid">
+        <div class="service-card"><i class="fas fa-teeth"></i><h3>Implants</h3></div>
+        <div class="service-card"><i class="fas fa-tooth"></i><h3>Root Canal</h3></div>
+        <div class="service-card"><i class="fas fa-smile-beam"></i><h3>Whitening</h3></div>
+        <div class="service-card"><i class="fas fa-align-center"></i><h3>Invisalign</h3></div>
+        <div class="service-card"><i class="fas fa-grimace"></i><h3>Braces</h3></div>
+        <div class="service-card"><i class="fas fa-user-md"></i><h3>Oral Surgery</h3></div>
+        <div class="service-card"><i class="fas fa-baby"></i><h3>Kids Dental</h3></div>
+        <div class="service-card"><i class="fas fa-microscope"></i><h3>Full Checkup</h3></div>
+    </div>
+</section>
+
+<!-- VIDEO SECTION (click to play with sound) -->
+<section class="insta-video-section">
+    <div class="insta-container">
+        <div class="insta-header">
+            <h2><i class="fab fa-instagram"></i> Smile Stories · Real Transformations<span class="insta-badge"><i class="fas fa-play"></i> Reels</span></h2>
+            <div class="insta-subhead"><i class="fas fa-heart" style="color: #E1306C;"></i> From our Instagram · awareness & education · @maparedental</div>
+        </div>
+        <div class="video-scroll-container" id="videoScrollContainer">
+            <div class="insta-video-card" data-video="video1.mp4">
+                <div class="insta-play-icon"><i class="fas fa-play"></i></div>
+                <video src="video1.mp4" loop muted playsinline preload="metadata"></video>
+                <div class="insta-info-overlay">
+                    <span class="insta-banner">✨ Invisalign smile</span>
+                    <div class="insta-doctor"><i>👨‍⚕️</i> Dr. Sagar Mapare</div>
+                    <div class="insta-handle"><i class="fab fa-instagram"></i> 1.2M views · @maparedental</div>
+                </div>
+            </div>
+            <div class="insta-video-card" data-video="video2.mp4">
+                <div class="insta-play-icon"><i class="fas fa-play"></i></div>
+                <video src="video2.mp4" loop muted playsinline preload="metadata"></video>
+                <div class="insta-info-overlay">
+                    <span class="insta-banner">🦷 Root Canal comfort</span>
+                    <div class="insta-doctor"><i>👩‍⚕️</i> Dr. Sagar Mapare</div>
+                    <div class="insta-handle"><i class="fab fa-instagram"></i> 850K views · @maparedental</div>
+                </div>
+            </div>
+            <div class="insta-video-card" data-video="video3.mp4">
+                <div class="insta-play-icon"><i class="fas fa-play"></i></div>
+                <video src="video3.mp4" loop muted playsinline preload="metadata"></video>
+                <div class="insta-info-overlay">
+                    <span class="insta-banner">✨ Dental Implant journey</span>
+                    <div class="insta-doctor"><i>👨‍⚕️</i> Dr. Sagar Mapare</div>
+                    <div class="insta-handle"><i class="fab fa-instagram"></i> 2.3M views · @maparedental</div>
+                </div>
+            </div>
+            <div class="insta-video-card" data-video="video4.mp4">
+                <div class="insta-play-icon"><i class="fas fa-play"></i></div>
+                <video src="video4.mp4" loop muted playsinline preload="metadata"></video>
+                <div class="insta-info-overlay">
+                    <span class="insta-banner">🦷 Braces transformation</span>
+                    <div class="insta-doctor"><i>👩‍⚕️</i> Dr.Sagar Mapare</div>
+                    <div class="insta-handle"><i class="fab fa-instagram"></i> 1.8M views · @maparedental</div>
+                </div>
+            </div>
+        </div>
+        <div style="text-align: right; margin-top: 5px; color: #aaa; font-size: 13px; padding-right: 10px;"><i class="fas fa-chevron-left"></i> swipe for more <i class="fas fa-chevron-right"></i></div>
+    </div>
+</section>
+
+<!-- TRUST SECTION -->
+<section class="trust-section">
+    <div class="trust-container">
+        <div class="trust-header"><h2>Why Trust Mapare Dental Hospital</h2></div>
+        <div class="trust-grid">
+            <div class="trust-image-wrapper"><img src="trust.jpeg" alt="Trust Mapare Dental"></div>
+            <div class="cards-wrapper">
+                <label class="card-container"><input type="checkbox" class="card-input"><div class="card-inner"><div class="card-front"><h3 class="card-title">Expert Treatment</h3><ul class="card-list"><li>27+ Years Clinical Experience</li><li>Globally Certified Partners</li><li>Advanced 3D Intraoral Scanning</li></ul><div class="btn-mini">Click for more</div></div><div class="card-back"><h3 class="card-title">Patient Benefits</h3><p>We use AI-driven diagnostics to ensure 99.9% accuracy in treatment planning.</p><ul class="card-list"><li>Precision Imaging</li><li>Digital Smile Design</li></ul></div></div></label>
+                <label class="card-container"><input type="checkbox" class="card-input"><div class="card-inner"><div class="card-front"><h3 class="card-title">Doctor-Led Care</h3><ul class="card-list"><li>Consultants with MDS Degrees</li><li>Personalized Case Management</li><li>Quality Assurance Reviews</li></ul><div class="btn-mini">Click for more</div></div><div class="card-back"><h3 class="card-title">Specialist Access</h3><p>Direct access to senior dental surgeons for complex procedures.</p><ul class="card-list"><li>On-call Emergency Support</li><li>Transparent Pricing</li></ul></div></div></label>
+                <label class="card-container"><input type="checkbox" class="card-input"><div class="card-inner"><div class="card-front"><h3 class="card-title">Legacy of Trust</h3><ul class="card-list"><li>50,000+ Successful Implants</li><li>3 Lakh+ Happy Patients</li><li>Trusted since 1999</li></ul><div class="btn-mini">Click for more</div></div><div class="card-back"><h3 class="card-title">Our History</h3><p>Mapare Dental has been a pillar of oral health in the community for nearly three decades.</p><ul class="card-list"><li>Awarded for Excellence</li><li>Community Dental Programs</li></ul></div></div></label>
+                <label class="card-container"><input type="checkbox" class="card-input"><div class="card-inner"><div class="card-front"><h3 class="card-title">Unmatched Safety</h3><ul class="card-list"><li>10X Safety Protocols</li><li>Class-B Sterilization</li><li>ISO Certified Environment</li></ul><div class="btn-mini">Click for more</div></div><div class="card-back"><h3 class="card-title">Zero Infection Goal</h3><p>We utilize medical-grade autoclaves and chemical indicators for every tool used.</p><ul class="card-list"><li>Contactless Appointments</li><li>Air Filtration Systems</li></ul></div></div></label>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- GOOGLE REVIEWS SECTION -->
+<section class="reviews-section">
+    <div class="reviews-container">
+        <div class="reviews-header"><h2><i class="fab fa-google"></i> What Our Patients Say <i class="fas fa-star" style="color: var(--brand-orange);"></i></h2></div>
+        <div class="reviews-viewport">
+            <div class="reviews-row">
+                <div class="reviews-summary"><img src="google_icon.png" alt="Google" class="google-logo-large"><div class="summary-stats"><h3>3 Lakh +</h3><p>verified ratings</p><div class="stars-row"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><div class="avg-text">Average rating of 4.9</div></div></div>
+                <div class="review-card"><div class="card-corner"><img src="google_icon.png" alt="G"></div><div class="user-info"><div class="avatar" style="color: #4285F4;">KY</div><div class="user-name">Dr. Krishan Kumar Yadav</div><div class="card-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><p class="review-text">"Very professional dentist, super helpful to take an emergency for a broken tooth and to find a solution for the same. Strongly recommend especially for foreigners."</p></div>
+                <div class="review-card"><div class="card-corner"><img src="google_icon.png" alt="G"></div><div class="user-info"><div class="avatar" style="color: #DB4437;">MJ</div><div class="user-name">Mildred James</div><div class="card-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><p class="review-text">"Excellent experience with all the doctors. Very caring for the patient. My RCT, Crown and extraction was done smoothly. Best clinic I have ever visited."</p></div>
+                <div class="review-card"><div class="card-corner"><img src="google_icon.png" alt="G"></div><div class="user-info"><div class="avatar" style="color: #0F9D58;">MA</div><div class="user-name">Manish Aswale</div><div class="card-stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div></div><p class="review-text">"Very efficient and professional. I have done my wisdom tooth extraction here. The staff is polite and the clinic environment is extremely hygienic and safe."</p></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="site-footer">
+    <div class="footer-container">
+        <div class="footer-brand">
+            <div class="footer-logo-wrap"><img src="logo.jpeg" alt="Mapare Dental"><div class="footer-logo-text">Mapare:)<small>DENTAL</small></div></div>
+            <p class="footer-tagline">Premium dental care with a legacy of trust. Transforming smiles since 1999.</p>
+            <div class="footer-contact">
+                <p><i class="fas fa-phone-alt"></i> +91 90673 03788 (Clinic)</p>
+                <p><i class="fas fa-phone-alt"></i> +91 98506 85007 (Alternate)</p>
+                <p><i class="fas fa-ambulance"></i> +91 97644 58188 (Emergency 24/7)</p>
+                <p><i class="fab fa-whatsapp"></i> +91 99231 53953 (WhatsApp)</p>
+                <p><i class="fas fa-envelope"></i> sagarmapare@gmail.com</p>
+                <p><i class="fas fa-map-marker-alt"></i> Nanded, Maharashtra</p>
+            </div>
+        </div>
+        <div class="footer-links-grid">
+            <div class="footer-links-column"><h4>Quick Links</h4><ul><li><a href="index.html">Home</a></li><li><a href="service.html">Treatments</a></li><li><a href="doctors.html">Our Doctors</a></li><li><a href="find-clinic.html">Find Clinic</a></li><li><a href="appointment.html">Book Appointment</a></li></ul></div>
+            <div class="footer-links-column"><h4>Services</h4><ul><li><a href="service.html">Dental Implants</a></li><li><a href="service.html">Root Canal</a></li><li><a href="service.html">Invisalign</a></li><li><a href="service.html">Teeth Whitening</a></li><li><a href="service.html">Kids Dental</a></li></ul></div>
+            <div class="footer-links-column"><h4>Support</h4><ul><li><a href="#">FAQs</a></li><li><a href="#">Privacy Policy</a></li><li><a href="#">Terms of Use</a></li><li><a href="#">Contact Us</a></li><li><a href="#">EMI Options</a></li></ul></div>
+        </div>
+        <div class="footer-social-col"><h4>Connect With Us</h4><div class="footer-social-icons">
+            <a href="https://www.instagram.com/mapare_dental" target="_blank"><i class="fab fa-instagram"></i></a>
+            <a href="https://www.facebook.com/maparedental" target="_blank"><i class="fab fa-facebook-f"></i></a>
+            <a href="https://youtube.com/@mapare_dental" target="_blank"><i class="fab fa-youtube"></i></a>
+            <a href="https://wa.me/919764458188" target="_blank"><i class="fab fa-whatsapp"></i></a>
+        </div><div class="footer-newsletter"><p>Subscribe for oral health tips</p><div class="newsletter-input"><input type="email" placeholder="Your email"><button><i class="fas fa-paper-plane"></i></button></div></div></div>
+    </div>
+    <div class="footer-bottom"><div>© 2026 Mapare Dental Hospital. All rights reserved.</div><div class="footer-bottom-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Sitemap</a></div></div>
+</footer>
+
+<!-- BOTTOM NAV -->
+<nav class="bottom-nav">
+    <a href="appointment.html" class="nav-link"><i class="fas fa-calendar-check"></i>Appointment</a>
+    <a href="https://wa.me/919764458188" class="nav-link"><i class="fab fa-whatsapp"></i>Whatsapp</a>
+    <a href="tel:+919923153953" class="nav-link"><i class="fas fa-phone-alt"></i>Callback</a>
+    <a href="https://www.instagram.com/mapare_dental" target="_blank" class="nav-link"><i class="fab fa-instagram"></i>Instagram</a>
+</nav>
+
+<script>
+    // Slider functionality
+    let currentSlide = 0;
+    const sliderWrapper = document.getElementById('sliderWrapper');
+    const slidesCount = 3;
+    function moveSlider(direction) {
+        currentSlide = (currentSlide + direction + slidesCount) % slidesCount;
+        sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+    }
+
+    // Call drawer (right side drawer)
+    function toggleCallDrawer() {
+        const drawer = document.getElementById('callDrawer');
+        drawer.classList.toggle('active');
+        document.getElementById('overlay').style.display = drawer.classList.contains('active') ? 'block' : 'none';
+    }
+    function closeCallDrawer() {
+        document.getElementById('callDrawer').classList.remove('active');
+        document.getElementById('overlay').style.display = 'none';
+    }
+
+    // Menu drawer
+    function toggleMenu() {
+        const drawer = document.getElementById('sideDrawer');
+        drawer.classList.toggle('active');
+        document.getElementById('overlay').style.display = drawer.classList.contains('active') ? 'block' : 'none';
+    }
+    function closeAll() {
+        document.getElementById('sideDrawer').classList.remove('active');
+        document.getElementById('callDrawer').classList.remove('active');
+        document.getElementById('overlay').style.display = 'none';
+    }
+    document.querySelectorAll('.drawer-menu a').forEach(link => {
+        link.addEventListener('click', () => {
+            document.getElementById('sideDrawer').classList.remove('active');
+            document.getElementById('overlay').style.display = 'none';
+        });
+    });
+
+    // WhatsApp booking handler for home page form
+    const homeForm = document.getElementById('homeAppointmentForm');
+    homeForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const name = document.getElementById('homeName').value.trim();
+        const mobile = document.getElementById('homeMobile').value.trim();
+        const timeSlot = document.getElementById('homeTime').value;
+        const treatment = document.getElementById('homeTreatment').value;
+
+        if (!name || !mobile) {
+            alert("Please enter your name and mobile number.");
+            return;
+        }
+        if (!/^\d{10}$/.test(mobile)) {
+            alert("Please enter a valid 10-digit mobile number.");
+            return;
+        }
+        if (!timeSlot || timeSlot === "") {
+            alert("Please select a preferred time slot.");
+            return;
+        }
+        if (!treatment || treatment === "") {
+            alert("Please select a treatment.");
+            return;
+        }
+
+        let message = `🦷 *New Appointment Request* 🦷%0A%0A*Name:* ${name}%0A*Mobile:* ${mobile}%0A*Preferred Time:* ${timeSlot}%0A*Treatment:* ${treatment}%0A%0A📍 Clinic: Mapare Dental%0A🙏 Please confirm availability.`;
+        const whatsappNumber = "919923153953";
+        const url = `https://wa.me/${whatsappNumber}?text=${message}`;
+        window.open(url, '_blank');
+    });
+
+    // Video click to play with sound
+    const videoCards = document.querySelectorAll('.insta-video-card');
+    videoCards.forEach(card => {
+        const video = card.querySelector('video');
+        const playIcon = card.querySelector('.insta-play-icon');
+        
+        card.addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (video.paused) {
+                // Pause all other videos first
+                videoCards.forEach(otherCard => {
+                    const otherVideo = otherCard.querySelector('video');
+                    if (otherVideo !== video && !otherVideo.paused) {
+                        otherVideo.pause();
+                        otherCard.classList.remove('playing');
+                    }
+                });
+                // Play this video with sound
+                video.muted = false;
+                video.play().catch(err => console.log("Play error:", err));
+                card.classList.add('playing');
+            } else {
+                video.pause();
+                card.classList.remove('playing');
+            }
+        });
+        
+        // Optional: reset play icon when video ends
+        video.addEventListener('ended', () => {
+            card.classList.remove('playing');
+        });
+    });
+</script>
+</body>
+</html>
